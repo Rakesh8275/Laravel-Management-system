@@ -1,0 +1,53 @@
+ 
+    public function listsale()
+    {
+
+        $users['list'] = DB::table('sales')
+                ->join('sale_details', 'sales.id', '=', 'sale_details.sale_id')
+                ->join('customers', 'customers.id', '=', 'sales.customer_name')
+                ->join('sale_types', 'sale_types.id', '=', 'sales.bill')
+               ->get(['sales.*', 'sale_details.*', 'customers.customer_name', 'sale_types.type']);
+        
+        return view('sale.salelist', $users);
+    }
+    public function edit($id)
+    {
+        $saleok = DB::table('sales')
+                ->join('sale_details', 'sale_details.sale_id', '=', 'sales.id')
+                ->where('sales.id', $id)
+                ->get();
+        return view('sale.saleedit', compact('saleok'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+
+        DB::whereId($id)->update($request->all());
+        Alert::success('Congrats', 'You\'ve Successfully updated');
+        return redirect('/salelist')->with('completed', 'product has been updated');
+    }
+
+ 
+ 
+ $data = [
+            'title' => 'Welcome to ItSolutionStuff.com',
+            'date' => date('m/d/Y')
+        ];
+          
+        $pdf = PDF::loadView('sale/salecreate', $data);
+    
+        return $pdf->download('sale.pdf');
+
+        $custo = DB::table('sales')
+                ->join('sale_details', 'sales.id', '=', 'sale_details.sale_id')
+                ->join('customers', 'customers.id', '=', 'sales.customer_name')
+                ->join('sale_types', 'sale_types.id', '=', 'sales.bill')
+                ->join('states', 'states.id', '=', 'sales.state')
+               ->get(['sales.*', 'sale_details.*', 'customers.customer_name', 'sale_types.type', 'states.name']);
